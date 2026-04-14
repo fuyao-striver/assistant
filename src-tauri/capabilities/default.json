@@ -3,9 +3,16 @@
   "identifier": "default",
   "description": "enables the default permissions",
   "windows": [
+    "background",
     "main"
   ],
   "permissions": [
-    "core:default"
+    "core:default",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-is-visible",
+    "core:window:allow-set-size",
+    "core:window:allow-set-position",
+    "core:window:allow-hide",
+    "core:window:allow-show"
   ]
 }
