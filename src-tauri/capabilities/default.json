@@ -2,10 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "enables the default permissions",
-  "windows": [
-    "background",
-    "main"
-  ],
+  "windows": ["background", "main"],
   "permissions": [
     "core:default",
     "core:webview:allow-create-webview-window",
