@@ -2,14 +2,19 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "enables the default permissions",
-  "windows": ["background", "main"],
+  "windows": ["background", "mainWindow"],
   "permissions": [
     "core:default",
+    "process:default",
     "core:webview:allow-create-webview-window",
     "core:window:allow-is-visible",
     "core:window:allow-set-size",
     "core:window:allow-set-position",
     "core:window:allow-hide",
-    "core:window:allow-show"
+    "core:window:allow-show",
+    "core:window:allow-start-dragging",
+    "core:window:allow-close",
+    "core:window:allow-unminimize",
+    "core:window:allow-minimize"
   ]
 }

@@ -1,1 +1,31 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+:root {
+  font-size: 16px;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+body {
+  font-family: DingTalk;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.main {
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 0.5rem 0.5rem 3.5rem 0.5rem;
+  position: relative;
+}
+
+.dragDiv {
+  width: 100vw;
+  height: 30px;
+  position: absolute;
+  top: -8px;
+  left: -8px;
+}

@@ -3,7 +3,9 @@
   "specifiers": {
     "npm:@tailwindcss/vite@^4.2.2": "4.2.2_vite@8.0.0__@types+node@24.12.0",
     "npm:@tauri-apps/api@^2.10.1": "2.10.1",
+    "npm:@tauri-apps/plugin-process@^2.3.1": "2.3.1",
     "npm:@types/node@^24.12.0": "24.12.0",
+    "npm:@vicons/tabler@0.13": "0.13.0",
     "npm:@vitejs/plugin-vue@^6.0.5": "6.0.5_vite@8.0.0__@types+node@24.12.0_vue@3.5.30__typescript@5.9.3_@types+node@24.12.0_typescript@5.9.3",
     "npm:@vue/tsconfig@0.9": "0.9.0_typescript@5.9.3_vue@3.5.30__typescript@5.9.3",
     "npm:naive-ui@^2.44.1": "2.44.1_vue@3.5.30__typescript@5.9.3",
@@ -391,6 +393,12 @@
     "@tauri-apps/api@2.10.1": {
       "integrity": "sha512-hKL/jWf293UDSUN09rR69hrToyIXBb8CjGaWC7gfinvnQrBVvnLr08FeFi38gxtugAVyVcTa5/FD/Xnkb1siBw=="
     },
+    "@tauri-apps/plugin-process@2.3.1": {
+      "integrity": "sha512-nCa4fGVaDL/B9ai03VyPOjfAHRHSBz5v6F/ObsB73r/dA3MHHhZtldaDMIc0V/pnUw9ehzr2iEG+XkSEyC0JJA==",
+      "dependencies": [
+        "@tauri-apps/api"
+      ]
+    },
     "@tybys/wasm-util@0.10.1": {
       "integrity": "sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==",
       "dependencies": [
@@ -411,6 +419,9 @@
       "dependencies": [
         "undici-types"
       ]
+    },
+    "@vicons/tabler@0.13.0": {
+      "integrity": "sha512-AykuhiqjszkIoAL/7knIFm6RDOBS1ZmQdJfQ+RNLEah0fVsxykUFCfMBSNZh8lOzC85EtdD1k5g/sv5GYk0Ohg=="
     },
     "@vitejs/plugin-vue@6.0.5_vite@8.0.0__@types+node@24.12.0_vue@3.5.30__typescript@5.9.3_@types+node@24.12.0_typescript@5.9.3": {
       "integrity": "sha512-bL3AxKuQySfk1iGcBsQnoRVexTPJq0Z/ixFVM8OhVJAP6ZXXXLtM7NFKWhLl30Kg7uTBqIaPXbh+nuQCuBDedg==",
@@ -902,7 +913,9 @@
       "dependencies": [
         "npm:@tailwindcss/vite@^4.2.2",
         "npm:@tauri-apps/api@^2.10.1",
+        "npm:@tauri-apps/plugin-process@^2.3.1",
         "npm:@types/node@^24.12.0",
+        "npm:@vicons/tabler@0.13",
         "npm:@vitejs/plugin-vue@^6.0.5",
         "npm:@vue/tsconfig@0.9",
         "npm:naive-ui@^2.44.1",
