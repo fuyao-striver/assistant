@@ -57,6 +57,6 @@ export const configInit = () => {
   }
 };
 
-export const getClientPath = async ()=> {
+export const getClientPath = async () => {
   return await invoke<string>("get_client_path");
-}
+};

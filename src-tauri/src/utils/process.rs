@@ -48,7 +48,7 @@ pub fn get_auth_info() -> Result<AuthResponse, ProcessInfoError> {
         .find(|arg| arg.to_string_lossy().starts_with("--app-port="))
         .map(|arg| {
             arg.to_string_lossy()
-                .strip_prefix("--app_port=")
+                .strip_prefix("--app-port=")
                 .unwrap()
                 .to_string()
         })

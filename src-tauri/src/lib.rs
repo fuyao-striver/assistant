@@ -3,7 +3,7 @@ mod handler;
 mod rest;
 mod utils;
 
-use handler::{close_lol_client, launch_lol};
+use handler::{close_lol_client, launch_lol, listen_for_client_start};
 
 #[tokio::main]
 pub async fn run() {
@@ -18,7 +18,11 @@ pub async fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![launch_lol, close_lol_client])
+        .invoke_handler(tauri::generate_handler![
+            launch_lol,
+            close_lol_client,
+            listen_for_client_start
+        ])
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init())
         .run(tauri::generate_context!())
