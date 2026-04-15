@@ -1,4 +1,7 @@
+mod error;
 mod handler;
+mod rest;
+mod utils;
 
 use handler::{close_lol_client, launch_lol};
 

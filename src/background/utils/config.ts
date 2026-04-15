@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import type { ConfigRank, ConfigSettingTypes } from "../types";
 
 const configSetting: ConfigSettingTypes = {
@@ -55,3 +56,7 @@ export const configInit = () => {
     addConfig("configRank", configRank);
   }
 };
+
+export const getClientPath = async ()=> {
+  return await invoke<string>("get_client_path");
+}
