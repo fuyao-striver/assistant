@@ -12,7 +12,9 @@
   "dependencies": {
     "@tauri-apps/api": "^2.10.1",
     "@tauri-apps/plugin-process": "^2.3.1",
-    "vue": "^3.5.30"
+    "@tauri-apps/plugin-shell": "^2.3.5",
+    "vue": "^3.5.30",
+    "vue-router": "^5.0.4"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.2",
