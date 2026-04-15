@@ -99,7 +99,7 @@ const handleConfirm = () => {
     onPositiveClick: async () => {
       exit(1);
       if (shouldCloseLOL.value) {
-        // TODO: 添加关闭 LOL 客户端的功能
+        // 关闭 LOL 客户端的功能
         await invoke("close_lol_client");
       }
     },
