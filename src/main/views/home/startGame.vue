@@ -49,7 +49,7 @@ const startGame = async () => {
   if (path === null) {
     message.info("路径不存在，首次启动请先打开客户端", { duration: 4000 });
   } else {
-    // TODO: 启动客户端
+    // 启动客户端
     await invoke("launch_lol", { path });
     message.loading("英雄联盟客户端启动中...");
   }
