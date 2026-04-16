@@ -4,7 +4,7 @@ use once_cell::sync::OnceCell;
 use tauri::{AppHandle, Emitter};
 use tokio::process::Command;
 
-use crate::{rest::RESTClient, utils::process::get_auth_info};
+use crate::{rest::RESTClient, utils::{global_key::init_global_keyboard, process::get_auth_info}};
 
 // 定义全局的 REST 客户端
 static REST_CLIENT: OnceCell<RESTClient> = OnceCell::new();
@@ -14,6 +14,23 @@ fn get_client() -> Result<&'static RESTClient, String> {
         .get()
         .ok_or_else(|| "REST_CLIENT未初始化".to_string())
 }
+
+
+
+/// 初始化全局键盘监听器
+/// 
+/// 该函数启动一个异步任务来初始化全局键盘事件处理
+/// 
+/// # 参数
+/// * `app` - 应用程序句柄，用于在键盘事件触发时与应用程序进行交互
+/// 
+/// # 返回值
+/// 无返回值，函数以异步方式运行键盘初始化任务
+#[tauri::command]
+pub async fn init_keyboard(app: AppHandle) {
+    tokio::spawn(async move { init_global_keyboard(app); });
+}
+
 
 /// 监听客户端启动状态，在后台异步检查客户端是否已启动并获取认证信息
 ///
