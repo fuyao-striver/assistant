@@ -33,14 +33,17 @@ impl RESTClient {
     ///
     /// # 注意
     /// - 如果JSON解析失败，函数会返回 `serde_json::Value::Null` 而不是错误
-    pub async fn get(&self, endpoint: &str) -> anyhow::Result<serde_json::Value> {
+    pub async fn get(&self, endpoint: &str) -> Result<serde_json::Value, serde_json::Value> {
         let url = format!("https://127.0.0.1:{}{}", self.port, endpoint);
         log::debug!("[HTTP GET] URL: {}", url);
 
         // 记录请求开始时间用于性能监控
         let start = std::time::Instant::now();
 
-        let response = self.client.get(&url).send().await?;
+        let response = self.client.get(&url).send().await.map_err(|e| {
+            log::error!("响应错误: {}", e);
+            serde_json::Value::Null
+        })?;
 
         let duration = start.elapsed();
         log::debug!(
@@ -49,7 +52,14 @@ impl RESTClient {
             response.status()
         );
 
-        let result = response.error_for_status()?.json().await;
+        let result = response
+            .error_for_status()
+            .map_err(|e| {
+                log::error!("状态错误: {}", e);
+                serde_json::Value::Null
+            })?
+            .json()
+            .await;
 
         // 处理JSON解析结果，解析失败时返回Null而不是错误
         match result {

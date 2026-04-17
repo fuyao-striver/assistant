@@ -4,33 +4,59 @@ use once_cell::sync::OnceCell;
 use tauri::{AppHandle, Emitter};
 use tokio::process::Command;
 
-use crate::{rest::RESTClient, utils::{global_key::init_global_keyboard, process::get_auth_info}};
+use crate::{
+    rest::RESTClient,
+    utils::{global_key::init_global_keyboard, process::get_auth_info},
+};
 
 // 定义全局的 REST 客户端
 static REST_CLIENT: OnceCell<RESTClient> = OnceCell::new();
 // 获取 REST_CLIENT 的函数
-fn get_client() -> Result<&'static RESTClient, String> {
-    REST_CLIENT
-        .get()
-        .ok_or_else(|| "REST_CLIENT未初始化".to_string())
+fn get_client() -> Result<&'static RESTClient, serde_json::Value> {
+    REST_CLIENT.get().ok_or_else(|| {
+        log::error!("REST_CLIENT未初始化");
+        serde_json::Value::Null
+    })
 }
 
-
+/// 获取客户端安装路径
+///
+/// 该函数通过HTTP请求获取客户端的安装目录路径
+///
+/// # Returns
+/// * `Ok(String)` - 成功时返回客户端安装路径字符串
+/// * `Err(String)` - 失败时返回错误信息字符串
+#[tauri::command]
+pub async fn get_client_path() -> Result<String, serde_json::Value> {
+    // 获取HTTP客户端实例
+    let client = get_client()?;
+    // 发起GET请求获取安装目录信息
+    let result = client.get("/data-store/v1/install-dir").await?;
+    // 将响应结果反序列化为字符串类型的路径
+    let path = serde_json::from_value::<String>(result).map_err(|e| {
+        log::error!("解析JSON失败: {}", e);
+        serde_json::Value::Null
+    })?;
+    let path = path.replace("LeagueClient", r"TCLS\client.exe");
+    log::info!("获取客户端安装路径: {}", path);
+    Ok(path)
+}
 
 /// 初始化全局键盘监听器
-/// 
+///
 /// 该函数启动一个异步任务来初始化全局键盘事件处理
-/// 
+///
 /// # 参数
 /// * `app` - 应用程序句柄，用于在键盘事件触发时与应用程序进行交互
-/// 
+///
 /// # 返回值
 /// 无返回值，函数以异步方式运行键盘初始化任务
 #[tauri::command]
 pub async fn init_keyboard(app: AppHandle) {
-    tokio::spawn(async move { init_global_keyboard(app); });
+    tokio::spawn(async move {
+        init_global_keyboard(app);
+    });
 }
-
 
 /// 监听客户端启动状态，在后台异步检查客户端是否已启动并获取认证信息
 ///

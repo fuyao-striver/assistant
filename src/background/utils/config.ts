@@ -58,5 +58,10 @@ export const configInit = () => {
 };
 
 export const getClientPath = async () => {
-  return await invoke<string>("get_client_path");
+  let path = await invoke<string | null>("get_client_path");
+  if (path === null) {
+    return false;
+  }
+  localStorage.setItem("clientPath", path);
+  return true;
 };

@@ -3,7 +3,9 @@ mod handler;
 mod rest;
 mod utils;
 
-use handler::{close_lol_client, launch_lol, listen_for_client_start,init_keyboard};
+use handler::{
+    close_lol_client, get_client_path, init_keyboard, launch_lol, listen_for_client_start,
+};
 
 #[tokio::main]
 pub async fn run() {
@@ -12,7 +14,7 @@ pub async fn run() {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
+                        .level(log::LevelFilter::Debug)
                         .build(),
                 )?;
             }
@@ -22,7 +24,8 @@ pub async fn run() {
             launch_lol,
             close_lol_client,
             listen_for_client_start,
-            init_keyboard
+            init_keyboard,
+            get_client_path
         ])
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init())
