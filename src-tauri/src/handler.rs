@@ -5,6 +5,7 @@ use tauri::{AppHandle, Emitter};
 use tokio::process::Command;
 
 use crate::{
+    lcu::listener::listen_client,
     rest::RESTClient,
     utils::{global_key::init_global_keyboard, process::get_auth_info},
 };
@@ -17,6 +18,22 @@ fn get_client() -> Result<&'static RESTClient, serde_json::Value> {
         log::error!("REST_CLIENT未初始化");
         serde_json::Value::Null
     })
+}
+
+/// 启动监听器
+///
+/// 该函数创建一个新的异步任务来运行客户端监听功能
+///
+/// # 参数
+/// * `app` - 应用程序句柄，用于在监听过程中与应用程序进行交互
+///
+/// # 返回值
+/// 该函数没有显式的返回值，它启动一个后台任务来处理监听逻辑
+#[tauri::command]
+pub async fn start_listener(app: AppHandle) {
+    tokio::spawn(async move {
+        listen_client(app).await;
+    });
 }
 
 /// 获取客户端安装路径

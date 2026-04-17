@@ -43,25 +43,31 @@ class Background {
     }
   };
 
+  /**
+   * 初始化助手功能
+   * 该方法负责初始化键盘监听并等待客户端启动，设置超时限制和轮询机制
+   */
   private initAsistant = async () => {
     const TIME_LIMIT = 30000;
     let elapsedTime = 0;
     const intervalTime = 3000;
-
+  
     await invoke("init_keyboard");
+    
+    // 定时检查客户端是否启动成功
     const lcuSuccess = setInterval(async () => {
       // 获取客户端路径
       const isGetPath = await getClientPath();
       if (isGetPath) {
         clearInterval(lcuSuccess);
-        setTimeout(() => {
+        setTimeout(async () => {
           // 发送开始游戏事件
           this.gameFlow.sendStartEvent();
-          // TODO: 启动监听器
-          // invoke("start_listener");
+          // 启动监听器
+          await invoke("start_listener");
         }, 500);
       }
-
+  
       elapsedTime += intervalTime;
       if (elapsedTime >= TIME_LIMIT) {
         clearInterval(lcuSuccess);

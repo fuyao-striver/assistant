@@ -6,7 +6,7 @@ authors = ["you"]
 license = ""
 repository = ""
 edition = "2024"
-rust-version = "1.94.1"
+rust-version = "1.95.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -33,3 +33,7 @@ reqwest = { version = "0.13.2", features = ["json", "native-tls"] }
 anyhow = "1.0.102"
 once_cell = "1.21.4"
 rdev = "0.5.3"
+tokio-tungstenite = {version = "0.29.0",features = ["native-tls"] }
+native-tls = "0.2.18"
+futures-util = "0.3.32"
+chrono = "0.4.44"
