@@ -51,9 +51,9 @@ class Background {
     const TIME_LIMIT = 30000;
     let elapsedTime = 0;
     const intervalTime = 3000;
-  
+
     await invoke("init_keyboard");
-    
+
     // 定时检查客户端是否启动成功
     const lcuSuccess = setInterval(async () => {
       // 获取客户端路径
@@ -67,7 +67,7 @@ class Background {
           await invoke("start_listener");
         }, 500);
       }
-  
+
       elapsedTime += intervalTime;
       if (elapsedTime >= TIME_LIMIT) {
         clearInterval(lcuSuccess);

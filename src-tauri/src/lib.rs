@@ -5,9 +5,10 @@ mod rest;
 mod utils;
 
 use handler::{
-    close_lol_client, get_client_path, init_keyboard, launch_lol, listen_for_client_start,
-    start_listener,
+    close_lol_client, get_client_path, get_lol_region, init_keyboard, launch_lol,
+    listen_for_client_start, start_listener,
 };
+use lcu::query_summoner_info;
 
 #[tokio::main]
 pub async fn run() {
@@ -39,7 +40,9 @@ pub async fn run() {
             listen_for_client_start,
             init_keyboard,
             get_client_path,
-            start_listener
+            start_listener,
+            query_summoner_info,
+            get_lol_region
         ])
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init())

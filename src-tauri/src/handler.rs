@@ -13,11 +13,26 @@ use crate::{
 // 定义全局的 REST 客户端
 static REST_CLIENT: OnceCell<RESTClient> = OnceCell::new();
 // 获取 REST_CLIENT 的函数
-fn get_client() -> Result<&'static RESTClient, serde_json::Value> {
+pub fn get_client() -> Result<&'static RESTClient, serde_json::Value> {
     REST_CLIENT.get().ok_or_else(|| {
         log::error!("REST_CLIENT未初始化");
         serde_json::Value::Null
     })
+}
+
+/// 获取英雄联盟游戏区域信息
+///
+/// 该函数通过获取认证信息来获得当前用户的英雄联盟游戏区域
+///
+/// # 返回值
+/// * `Ok(String)` - 成功时返回包含区域信息的字符串
+/// * `Err(String)` - 失败时返回错误描述信息
+#[tauri::command]
+pub fn get_lol_region() -> Result<String, String> {
+    match get_auth_info() {
+        Ok(info) => Ok(info.region),
+        Err(_) => Err("客户端未运行".to_string()),
+    }
 }
 
 /// 启动监听器
