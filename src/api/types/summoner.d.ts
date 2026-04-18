@@ -19,3 +19,9 @@ export interface SummonerInfo {
   /** 标签后缀，可能未定义 */
   tagLine: string | undefined;
 }
+
+export interface SummonerData {
+  summonerInfo: SummonerInfo | null;
+  rankList: string[] | null;
+  champLevel: string[][] | null;
+}

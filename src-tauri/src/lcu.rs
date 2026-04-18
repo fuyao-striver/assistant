@@ -1,12 +1,121 @@
 use crate::{
     handler::get_client,
-    lcu::summoner_types::{LcuSummonerInfo, SummonerInfo},
+    lcu::summoner_types::{LcuSummonerInfo, LeagueRankedData, SummonerHonor, SummonerInfo},
+    utils::tool::generate_rank_string,
 };
 
 pub mod listener;
 pub mod summoner_types;
 pub mod types;
 pub mod ws;
+
+
+/// 查询召唤师荣誉等级信息
+/// 
+/// 该函数通过LCU接口获取当前召唤师的荣誉等级和里程碑信息，
+/// 并格式化为字符串返回
+/// 
+/// # Returns
+/// * `Result<String, String>` - 成功时返回格式化的荣誉信息字符串，失败时返回错误信息
+///   - 成功：格式为"荣誉等级X  里程Y"
+///   - 失败：错误描述字符串
+#[tauri::command]
+pub async fn query_summoner_honor_level() -> Result<String, String> {
+    const ERROR_VALUE: &str = "Error";
+    
+    // 获取HTTP客户端实例
+    let client = get_client().map_err(|e| {
+        log::error!("获取HTTP客户端失败: {}", e);
+        ERROR_VALUE.to_string()
+    })?;
+    
+    // 发起API请求获取荣誉信息
+    let summoner_honor = client.get("/lol-honor-v2/v1/profile").await.map_err(|e| {
+        log::error!("API请求失败: {}", e);
+        ERROR_VALUE.to_string()
+    })?;
+    
+    // 解析JSON响应数据为SummonerHonor结构体
+    let lcu_summoner_info =
+        serde_json::from_value::<SummonerHonor>(summoner_honor).map_err(|e| {
+            log::error!("失败原因：{}", e);
+            ERROR_VALUE.to_string()
+        })?;
+
+    return Ok(format!(
+        "荣誉等级{}  里程{}",
+        lcu_summoner_info.honor_level, lcu_summoner_info.checkpoint
+    ));
+}
+
+/// 查询排位积分信息
+///
+/// 该函数通过指定的端点查询LCU（League Client Update）的排位数据，
+/// 并解析出三种主要游戏模式的排位信息：单双排、灵活组排和云顶之弈。
+///
+/// # 参数
+/// * `endpoint` - API端点URL字符串引用
+///
+/// # 返回值
+/// * `Ok(Vec<String>)` - 包含三种游戏模式排位信息的字符串向量，顺序为：[单双排, 灵活组排, 云顶之弈]
+/// * `Err(Vec<String>)` - 错误时返回包含三个"未定级"字符串的向量
+///
+/// # 错误处理
+/// 当网络请求失败、JSON反序列化失败或数据为空时，返回默认的错误值
+#[tauri::command]
+pub async fn query_rank_point(endpoint: &str) -> Result<Vec<String>, Vec<String>> {
+    static ERROR_VALUE: &[&str] = &["未定级", "未定级", "未定级"];
+
+    // 创建HTTP客户端
+    let client = match get_client() {
+        Ok(c) => c,
+        Err(e) => {
+            log::error!("失败原因：{}", e);
+            return Err(ERROR_VALUE.iter().map(|s| s.to_string()).collect());
+        }
+    };
+
+    // 发起GET请求获取响应
+    let response = match client.get(endpoint).await {
+        Ok(r) => r,
+        Err(e) => {
+            log::error!("失败原因：{}", e);
+            return Err(ERROR_VALUE.iter().map(|s| s.to_string()).collect());
+        }
+    };
+
+    // 反序列化JSON响应为排位数据结构
+    let lcu_rank_point_queues = match serde_json::from_value::<LeagueRankedData>(response) {
+        Ok(data) => data.queues,
+        Err(e) => {
+            log::error!("反序列化失败: {}", e);
+            return Err(ERROR_VALUE.iter().map(|s| s.to_string()).collect());
+        }
+    };
+
+    // 检查是否获取到有效的排位队列数据
+    if lcu_rank_point_queues.is_empty() {
+        return Err(ERROR_VALUE.iter().map(|s| s.to_string()).collect());
+    }
+
+    // 查找三种不同游戏模式的排位信息
+    let rank_solo = lcu_rank_point_queues
+        .iter()
+        .find(|item| item.queue_type == "RANKED_SOLO_5x5");
+    let rank_flex_result = lcu_rank_point_queues
+        .iter()
+        .find(|item| item.queue_type == "RANKED_FLEX_SR");
+    let rank_tft_result = lcu_rank_point_queues
+        .iter()
+        .find(|item| item.queue_type == "RANKED_TFT");
+
+    // 生成各游戏模式的排位字符串表示
+    let rank_solo_str = generate_rank_string(rank_solo);
+    let rank_flex_str = generate_rank_string(rank_flex_result);
+    let rank_tft_str = generate_rank_string(rank_tft_result);
+
+    Ok(vec![rank_solo_str, rank_flex_str, rank_tft_str])
+}
 
 /// 查询召唤师信息
 ///

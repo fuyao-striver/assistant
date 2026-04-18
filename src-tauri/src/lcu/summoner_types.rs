@@ -61,6 +61,7 @@ pub struct IRerollPoint {
 
 /// 召唤师信息结构体，用于存储召唤师的基本信息和游戏数据
 #[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SummonerInfo {
     /// 召唤师名称 - 用户在游戏中的显示名称
     pub name: String,
@@ -78,4 +79,104 @@ pub struct SummonerInfo {
     pub current_id: i64,
     /// 标签行 - 游戏标签信息，可能为空
     pub tag_line: Option<String>,
+}
+
+/// 排位数据总结构
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct LeagueRankedData {
+    pub current_season_split_points: u32,
+    pub earned_regalia_reward_ids: Vec<String>,
+    #[serde(rename = "highestCurrentSeasonReachedTierSR")]
+    pub highest_current_season_reached_tier_sr: String,
+    pub highest_previous_season_end_division: String,
+    pub highest_previous_season_end_tier: String,
+    pub highest_ranked_entry: RankedEntry,
+    #[serde(rename = "highestRankedEntrySR")]
+    pub highest_ranked_entry_sr: RankedEntry,
+    pub previous_season_split_points: u32,
+    pub queue_map: QueueMap,
+    pub queues: Vec<RankedEntry>,
+    pub ranked_regalia_level: u32,
+    pub seasons: Seasons,
+    /// 空对象时使用 Value 保持兼容
+    #[serde(default)]
+    pub splits_progress: serde_json::Value,
+}
+
+/// 单个排位条目（单双排 / 灵活组排 / 云顶等）
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct RankedEntry {
+    pub climbing_indicator_active: bool,
+    pub current_season_wins_for_rewards: u32,
+    pub division: String,
+    pub highest_division: String,
+    pub highest_tier: String,
+    pub is_provisional: bool,
+    pub league_points: i32,
+    pub losses: u32,
+    pub mini_series_progress: String,
+    pub previous_season_end_division: String,
+    pub previous_season_end_tier: String,
+    pub previous_season_highest_division: String,
+    pub previous_season_highest_tier: String,
+    pub previous_season_wins_for_rewards: u32,
+    pub provisional_game_threshold: u32,
+    pub provisional_games_remaining: u32,
+    pub queue_type: String,
+    pub rated_rating: u32,
+    pub rated_tier: String,
+    pub tier: String,
+    pub warnings: Option<serde_json::Value>,
+    pub wins: u32,
+}
+
+/// 各队列映射表
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct QueueMap {
+    #[serde(rename = "RANKED_FLEX_SR")]
+    pub ranked_flex_sr: RankedEntry,
+    #[serde(rename = "RANKED_SOLO_5x5")]
+    pub ranked_solo_5x5: RankedEntry,
+    #[serde(rename = "RANKED_TFT")]
+    pub ranked_tft: RankedEntry,
+    #[serde(rename = "RANKED_TFT_DOUBLE_UP")]
+    pub ranked_tft_double_up: RankedEntry,
+    #[serde(rename = "RANKED_TFT_TURBO")]
+    pub ranked_tft_turbo: RankedEntry,
+}
+
+/// 赛季信息集合
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct Seasons {
+    #[serde(rename = "RANKED_FLEX_SR")]
+    pub ranked_flex_sr: SeasonInfo,
+    #[serde(rename = "RANKED_SOLO_5x5")]
+    pub ranked_solo_5x5: SeasonInfo,
+    #[serde(rename = "RANKED_TFT")]
+    pub ranked_tft: SeasonInfo,
+    #[serde(rename = "RANKED_TFT_DOUBLE_UP")]
+    pub ranked_tft_double_up: SeasonInfo,
+    #[serde(rename = "RANKED_TFT_TURBO")]
+    pub ranked_tft_turbo: SeasonInfo,
+}
+
+/// 赛季时间信息
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SeasonInfo {
+    pub current_season_end: i64,
+    pub current_season_id: u32,
+    pub next_season_start: i64,
+}
+
+// 召唤师荣誉信息结构体
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SummonerHonor {
+    pub checkpoint: i32,
+    pub honor_level: i32,
+    pub redemptions: Vec<serde_json::Value>,
+    pub rewards_locked: bool,
 }
