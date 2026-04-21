@@ -1,7 +1,9 @@
 use crate::{
     handler::get_client,
-    lcu::summoner_types::{LcuSummonerInfo, LeagueRankedData, SummonerHonor, SummonerInfo},
-    utils::tool::generate_rank_string,
+    lcu::summoner_types::{
+        ChampionMastery, LcuSummonerInfo, LeagueRankedData, SummonerHonor, SummonerInfo,
+    },
+    utils::{champ_dict::ChampDict, tool::generate_rank_string},
 };
 
 pub mod listener;
@@ -9,12 +11,59 @@ pub mod summoner_types;
 pub mod types;
 pub mod ws;
 
+/// 查询英雄熟练度数据
+///
+/// 该函数通过API端点获取用户的英雄熟练度信息，并将其转换为包含英雄图片、名称和熟练度详情的结构化数据
+///
+/// # 参数
+/// * `endpoint` - API端点URL字符串引用，用于获取英雄熟练度原始数据
+///
+/// # 返回值
+/// * `Ok(Vec<[String; 3]>)` - 成功时返回包含最多20个英雄数据的向量，每个元素为[String; 3]数组，
+///   分别包含：英雄图片URL、英雄名称与标题、英雄等级和熟练度信息
+/// * `Err(serde_json::Value)` - 失败时返回JSON值，通常为序列化错误或数据处理异常
+///
+/// # 错误处理
+/// 当反序列化失败时记录错误日志并返回Null值；当无法获取客户端或初始化英雄字典失败时直接返回错误
+#[tauri::command]
+pub async fn query_champion_mastery(endpoint: &str) -> Result<Vec<[String; 3]>, serde_json::Value> {
+    let client = get_client()?;
+    ChampDict::init().await.expect("读取 champ_dict.json 失败");
+    let result = client.get(endpoint).await?;
+    let champion_mastery_list =
+        serde_json::from_value::<Vec<ChampionMastery>>(result).map_err(|e| {
+            log::error!("反序列化失败:{}", e);
+            serde_json::Value::Null
+        })?;
+
+    // 构建英雄熟练度查询结果列表，限制最多20个英雄并过滤有效数据
+    let query_mastery_champ_list: Vec<[String; 3]> = champion_mastery_list
+        .iter()
+        .take(20)
+        .filter_map(|item| {
+            // 安全地从全局字典取英雄信息
+            let champ = ChampDict::get(&item.champion_id.to_string())?;
+            Some([
+                format!(
+                    "https://game.gtimg.cn/images/lol/act/img/champion/{}.png",
+                    champ.alias
+                ),
+                format!("{}•{}", champ.label, champ.title),
+                format!(
+                    "英雄等级 {} / 熟练度 {}",
+                    item.champion_level, item.champion_points
+                ),
+            ])
+        })
+        .collect();
+    Ok(query_mastery_champ_list)
+}
 
 /// 查询召唤师荣誉等级信息
-/// 
+///
 /// 该函数通过LCU接口获取当前召唤师的荣誉等级和里程碑信息，
 /// 并格式化为字符串返回
-/// 
+///
 /// # Returns
 /// * `Result<String, String>` - 成功时返回格式化的荣誉信息字符串，失败时返回错误信息
 ///   - 成功：格式为"荣誉等级X  里程Y"
@@ -22,19 +71,19 @@ pub mod ws;
 #[tauri::command]
 pub async fn query_summoner_honor_level() -> Result<String, String> {
     const ERROR_VALUE: &str = "Error";
-    
+
     // 获取HTTP客户端实例
     let client = get_client().map_err(|e| {
         log::error!("获取HTTP客户端失败: {}", e);
         ERROR_VALUE.to_string()
     })?;
-    
+
     // 发起API请求获取荣誉信息
     let summoner_honor = client.get("/lol-honor-v2/v1/profile").await.map_err(|e| {
         log::error!("API请求失败: {}", e);
         ERROR_VALUE.to_string()
     })?;
-    
+
     // 解析JSON响应数据为SummonerHonor结构体
     let lcu_summoner_info =
         serde_json::from_value::<SummonerHonor>(summoner_honor).map_err(|e| {

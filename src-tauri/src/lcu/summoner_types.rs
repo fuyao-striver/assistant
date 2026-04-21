@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
 /// LCU召唤师信息结构体
@@ -179,4 +181,68 @@ pub struct SummonerHonor {
     pub honor_level: i32,
     pub redemptions: Vec<serde_json::Value>,
     pub rewards_locked: bool,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ChampionMastery {
+    #[serde(rename = "championId")]
+    pub champion_id: u32,
+
+    #[serde(rename = "championLevel")]
+    pub champion_level: u32,
+
+    #[serde(rename = "championPoints")]
+    pub champion_points: u64,
+
+    #[serde(rename = "championPointsSinceLastLevel")]
+    pub champion_points_since_last_level: i64,
+
+    #[serde(rename = "championPointsUntilNextLevel")]
+    pub champion_points_until_next_level: i64,
+
+    #[serde(rename = "championSeasonMilestone")]
+    pub champion_season_milestone: u32,
+
+    #[serde(rename = "highestGrade")]
+    pub highest_grade: String,
+
+    #[serde(rename = "lastPlayTime")]
+    pub last_play_time: u64,
+
+    #[serde(rename = "markRequiredForNextLevel")]
+    pub mark_required_for_next_level: u32,
+
+    #[serde(rename = "milestoneGrades")]
+    pub milestone_grades: Vec<String>,
+
+    #[serde(rename = "nextSeasonMilestone")]
+    pub next_season_milestone: NextSeasonMilestone,
+
+    pub puuid: String,
+
+    #[serde(rename = "tokensEarned")]
+    pub tokens_earned: u32,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct NextSeasonMilestone {
+    pub bonus: bool,
+
+    #[serde(rename = "requireGradeCounts")]
+    pub require_grade_counts: HashMap<String, u32>,
+
+    #[serde(rename = "rewardConfig")]
+    pub reward_config: RewardConfig,
+
+    #[serde(rename = "rewardMarks")]
+    pub reward_marks: u32,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct RewardConfig {
+    #[serde(rename = "maximumReward")]
+    pub maximum_reward: u32,
+
+    #[serde(rename = "rewardValue")]
+    pub reward_value: String,
 }

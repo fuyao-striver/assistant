@@ -23,6 +23,26 @@ export const queryRankPoint = async (puuid?: string): Promise<string[]> => {
   return invoke<string[]>("query_rank_point", { endpoint });
 };
 
+/**
+ * 查询召唤师荣誉等级
+ *
+ * @returns Promise<string> 返回召唤师的荣誉等级信息
+ */
 export const querySummonerHonorLevel = async (): Promise<string> => {
   return invoke<string>("query_summoner_honor_level");
-}
+};
+
+/**
+ * 查询英雄熟练度列表
+ * 获取指定召唤师或本地玩家的英雄熟练度信息
+ *
+ * @param summonerPuuid - 召唤师PUUID，可选参数。如果提供则查询指定召唤师的英雄熟练度，否则查询本地玩家的英雄熟练度
+ * @returns 返回一个Promise，解析为二维字符串数组，包含英雄熟练度数据
+ */
+export const queryMasteryChampList = async (summonerPuuid?: string) => {
+  // 根据是否提供召唤师PUUID来构建不同的API端点
+  const endpoint = summonerPuuid
+    ? `/lol-champion-mastery/v1/${summonerPuuid}/champion-mastery`
+    : "/lol-champion-mastery/v1/local-player/champion-mastery";
+  return invoke<string[]>("query_champion_mastery", { endpoint });
+};

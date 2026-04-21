@@ -20,8 +20,12 @@ export interface SummonerInfo {
   tagLine: string | undefined;
 }
 
+/**
+ * 召唤师数据接口
+ * 定义了召唤师信息、排位列表和英雄等级等数据结构
+ */
 export interface SummonerData {
   summonerInfo: SummonerInfo | null;
   rankList: string[] | null;
-  champLevel: string[][] | null;
+  champLevel: string[] | null;
 }

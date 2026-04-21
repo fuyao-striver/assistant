@@ -8,7 +8,9 @@ use handler::{
     close_lol_client, get_client_path, get_lol_region, init_keyboard, launch_lol,
     listen_for_client_start, start_listener,
 };
-use lcu::{query_rank_point, query_summoner_honor_level, query_summoner_info};
+use lcu::{
+    query_champion_mastery, query_rank_point, query_summoner_honor_level, query_summoner_info,
+};
 
 #[tokio::main]
 pub async fn run() {
@@ -44,7 +46,8 @@ pub async fn run() {
             query_summoner_info,
             get_lol_region,
             query_rank_point,
-            query_summoner_honor_level
+            query_summoner_honor_level,
+            query_champion_mastery
         ])
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init())

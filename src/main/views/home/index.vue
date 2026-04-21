@@ -80,7 +80,10 @@
           </n-space>
         </n-list-item>
       </n-list>
-      <!--段位 荣誉等级-->
+    </n-card>
+    <!--段位 荣誉等级-->
+    <n-card size="small" content-style="padding-top:10px" class="shadow! h-100.5!">
+      <summoner-mastery-champ v-if="summonerData.champLevel" :max-h="378" :exist-champ-list="summonerData.champLevel" />
     </n-card>
   </div>
   <div class="mainContent" v-else>
@@ -102,8 +105,9 @@ import {
   NEllipsis,
   NModal,
 } from "naive-ui";
-import { queryRankPoint, querySummonerHonorLevel, querySummonerInfo } from "@/api/summoner";
+import { queryMasteryChampList, queryRankPoint, querySummonerHonorLevel, querySummonerInfo } from "@/api/summoner";
 import startGame from "./startGame.vue";
+import SummonerMasteryChamp from "@/main/components/summonerMasteryChamp.vue";
 import { onMounted, reactive, ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import type { SummonerData } from "@/api/types/summoner";
@@ -115,10 +119,17 @@ const summonerData = reactive<SummonerData>({
   champLevel: null,
 });
 const init = async (isFristInit: boolean) => {
-  const [summonerInfo,rankPoint,honorData] = await Promise.all([querySummonerInfo(),queryRankPoint(),querySummonerHonorLevel()]);
+  const [summonerInfo, rankPoint, honorData, champLevel] = await Promise.all([
+    querySummonerInfo(),
+    queryRankPoint(),
+    querySummonerHonorLevel(),
+    queryMasteryChampList(),
+  ]);
+  console.log(champLevel);
   rankPoint.push(honorData);
   summonerData.summonerInfo = summonerInfo;
   summonerData.rankList = rankPoint;
+  summonerData.champLevel = champLevel;
 };
 
 onMounted(() => {
