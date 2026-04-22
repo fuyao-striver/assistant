@@ -4,12 +4,16 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
 
 const host = process.env.TAURI_DEV_HOST;
+import packageInfo from "./package.json";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
   // 防止 Vite 清除 Rust 显示的错误
   clearScreen: false,
+  define: {
+    __APP_VERSION__: JSON.stringify(packageInfo.version),
+  },
   server: {
     port: 5173,
     // Tauri 工作于固定端口，如果端口不可用则报错

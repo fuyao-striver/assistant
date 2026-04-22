@@ -33,7 +33,7 @@
     v-model:show="isShowDrawer"
     :placement="'bottom'"
     :auto-focus="false"
-    height="473"
+    height="580"
   >
     <setting />
   </n-drawer>
@@ -45,6 +45,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { CircleMinus, Settings, CircleX, Bulb } from "@vicons/tabler";
 import { NIcon, NButton, NCheckbox, NSpace, NDrawer, useDialog } from "naive-ui";
+import setting from "./setting.vue";
 import { h, ref } from "vue";
 import { exit } from "@tauri-apps/plugin-process";
 
