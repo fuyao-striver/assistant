@@ -42,3 +42,10 @@ body {
   animation: light 4s ease-in-out infinite;
   transition: 0.5s;
 }
+
+.queryMatchMain {
+  height: 100vh;
+  width: 100vw;
+  padding: 12px;
+  position: relative;
+}
