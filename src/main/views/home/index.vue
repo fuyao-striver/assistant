@@ -111,6 +111,7 @@ import SummonerMasteryChamp from "@/main/components/summonerMasteryChamp.vue";
 import { onMounted, reactive, ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import type { SummonerData } from "@/api/types/summoner";
+import { createQueryMatchWindow } from "@/background/utils/createWindows";
 
 const curRegion = ref<string>("");
 const summonerData = reactive<SummonerData>({
@@ -140,7 +141,7 @@ onMounted(() => {
   // TODO: 错误处理
 });
 
-const openWin = () => {
-  // TODO: 打开战绩窗口
+const openWin = async () => {
+  await createQueryMatchWindow();
 };
 </script>

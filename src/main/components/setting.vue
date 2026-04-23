@@ -6,7 +6,7 @@
           <div class="gap-x-5 flex justify-between items-center">
             <n-tag :bordered="false">鼓励开发</n-tag>
             <n-button @click="sponsor" style="width: 206px" size="small" secondary :bordered="false" type="warning">
-              赞助 Frank 英雄联盟助手
+              赞助英雄联盟助手
             </n-button>
           </div>
         </n-list-item>

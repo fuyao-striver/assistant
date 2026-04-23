@@ -39,9 +39,4 @@ impl ChampDict {
     pub fn get(key: &str) -> Option<&'static Champion> {
         CHAMP_DICT.get()?.get(key)
     }
-
-    /// 获取所有英雄数量
-    pub fn len() -> usize {
-        CHAMP_DICT.get().map_or(0, |d| d.len())
-    }
 }

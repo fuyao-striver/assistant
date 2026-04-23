@@ -2,7 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "enables the default permissions",
-  "windows": ["background", "mainWindow"],
+  "windows": ["background", "mainWindow", "queryMatchWindow"],
   "permissions": [
     "core:default",
     "process:default",
