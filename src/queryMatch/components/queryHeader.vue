@@ -4,7 +4,7 @@
       <img src="@/assets/icon/app-icon.png" class="h-10" draggable="false" />
       <img src="@/assets/icon/Frank.png" draggable="false" />
       <n-button
-        v-if="false"
+        v-if="matchStore.summonerId === matchStore.localSummonerId"
         @click.prevent="openWeb"
         size="small"
         style="margin-left: 30px; color: #666666; width: 90.41px"
@@ -86,11 +86,14 @@ import {
   useMessage,
   NIcon,
   NSpace,
-  MessageReactive,
+  type MessageReactive,
 } from "naive-ui";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import useMatchStore from "../store";
+import { open } from "@tauri-apps/plugin-shell";
 
 const message = useMessage();
+const matchStore = useMatchStore();
 const inputVal = ref("");
 const selectVal = ref(0);
 const pageVal = ref(1);
@@ -143,4 +146,23 @@ const refreshPage = () => {
 const pageChange = (page: number) => {
   // TODO: 获取数据
 };
+
+const openWeb = () => {
+  open("https://lolfrank.cn");
+};
+const backSelf = async () => {
+  await matchStore.init();
+  clearVal();
+};
+const clearVal = () => {
+  inputVal.value = "";
+  selectVal.value = 0;
+  pageVal.value = 1;
+};
+watch(
+  () => matchStore.summonerId,
+  () => {
+    clearVal();
+  },
+);
 </script>
