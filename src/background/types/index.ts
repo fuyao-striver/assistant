@@ -27,6 +27,14 @@ export enum LolTrackerMode {
 }
 
 /**
+ * 主题枚举
+ */
+export enum Theme {
+  LIGHT = "light",
+  DARK = "dark",
+}
+
+/**
  * 应用全局配置项的类型定义
  *
  * 涵盖自动 Ban/Pick、对局辅助、界面主题等用户可自定义的设置，
@@ -99,9 +107,9 @@ export interface ConfigSettingTypes {
   /**
    * 应用主题标识
    *
-   * 例如 `"dark"` / `"light"` / `"system"` 或自定义主题名称。
+   * @see Theme
    */
-  theme: string;
+  theme: Theme;
   /**
    * 是否以窗口化模式启动游戏
    *

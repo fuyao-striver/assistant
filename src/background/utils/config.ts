@@ -1,4 +1,4 @@
-import { type ConfigRank, type ConfigSettingTypes, Lane, LolTrackerMode, TierCode } from "@/background/types";
+import { type ConfigRank, type ConfigSettingTypes, Lane, LolTrackerMode, Theme, TierCode } from "@/background/types";
 
 const configSetting: ConfigSettingTypes = {
   autoPickChampion: {
@@ -11,7 +11,7 @@ const configSetting: ConfigSettingTypes = {
   },
   autoIsOne: true,
   autoAccept: 50,
-  theme: "light",
+  theme: Theme.LIGHT,
   isGameInWindow: true,
   isGameInTips: false,
   autoWriteBlock: true,
