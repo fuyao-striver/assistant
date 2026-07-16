@@ -12,6 +12,7 @@
     "format": "oxfmt ."
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.11.1",
     "vue": "^3.5.38"
   },
   "devDependencies": {
