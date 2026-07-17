@@ -19,11 +19,11 @@ interface WarmTipsSetting {
 /** LOL 追踪器的运行模式 */
 export enum LolTrackerMode {
   /** 关闭追踪 */
-  CLOSE = 0,
+  CLOSE = "Close",
   /** 吸附在客户端左侧 */
-  LEFT = 1,
+  LEFT = "Left",
   /** 吸附在客户端右侧 */
-  RIGHT = 2,
+  RIGHT = "Right",
 }
 
 /**
