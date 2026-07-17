@@ -3,5 +3,11 @@
   "identifier": "default",
   "description": "enables the default permissions",
   "windows": ["background", "main"],
-  "permissions": ["core:default", "core:webview:allow-create-webview-window", "core:window:allow-show"]
+  "permissions": [
+    "core:default",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-show",
+    "core:window:allow-start-dragging",
+    "core:window:allow-minimize"
+  ]
 }
