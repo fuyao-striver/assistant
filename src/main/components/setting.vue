@@ -193,6 +193,7 @@ import Sponsor from "@/main/components/sponsor.vue";
 import { type ConfigSettingTypes, LolTrackerMode, Theme } from "@/background/types";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { keywordsList, optionsChampion } from "@/resources/champList.ts";
+import { invoke } from "@tauri-apps/api/core";
 
 const showSponsor = ref(false);
 const dialog = useDialog();
@@ -247,10 +248,9 @@ const changeAutoAdhere = async (key: LolTrackerMode) => {
   config.value.lolTracker = key;
   saveConfig();
 
-  const enabled = key > 0;
-  const side = key === 1 ? "Left" : "Right";
-  // todo 实时同步给后端，线程会在下一次循环（16ms内）自动调整位置
-  // await invoke("sync_tracker_config", { enabled, side });
+  const enabled = key !== LolTrackerMode.CLOSE;
+  // 实时同步给后端，线程会在下一次循环（16ms内）自动调整位置
+  await invoke("sync_tracker_config", { enabled, side: key });
 };
 
 const saveConfig = () => {
