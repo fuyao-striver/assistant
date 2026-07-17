@@ -19,11 +19,11 @@ interface WarmTipsSetting {
 /** LOL 追踪器的运行模式 */
 export enum LolTrackerMode {
   /** 关闭追踪 */
-  DISABLED = 0,
-  /** 仅在选英雄阶段追踪 */
-  CHAMP_SELECT_ONLY = 1,
-  /** 全程追踪（含对局内） */
-  FULL = 2,
+  CLOSE = 0,
+  /** 吸附在客户端左侧 */
+  LEFT = 1,
+  /** 吸附在客户端右侧 */
+  RIGHT = 2,
 }
 
 /**

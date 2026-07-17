@@ -21,7 +21,7 @@ const configSetting: ConfigSettingTypes = {
     rankTips: false,
     teamTips: false,
   },
-  lolTracker: LolTrackerMode.DISABLED,
+  lolTracker: LolTrackerMode.CLOSE,
   shouldCloseLOL: true,
 };
 

@@ -28,7 +28,7 @@
       </n-button>
     </div>
   </header>
-  <n-drawer v-model:show="settingDrawer" :placement="'bottom'" :auto-focus="false" height="580" class="rounded-t-lg!">
+  <n-drawer v-model:show="settingDrawer" :placement="'bottom'" :auto-focus="false" height="590" class="rounded-t-lg!">
     <setting />
   </n-drawer>
 </template>
