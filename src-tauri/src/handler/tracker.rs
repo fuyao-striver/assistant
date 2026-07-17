@@ -127,3 +127,8 @@ pub fn start_tracking_loop(state: tauri::State<'_, AppState>, window: WebviewWin
     Tracker::start_tracking(main_win, state.is_enabled.clone(), state.dock_side.clone());
 }
 
+#[tauri::command]
+pub fn launch_lol(path: &str) {
+    std::process::Command::new(path).spawn().expect("Failed to launch lol");
+}
+

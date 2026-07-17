@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::AtomicBool;
-use crate::handler::tracker::{start_tracking_loop, sync_tracker_config, AppState};
+use crate::handler::tracker::{launch_lol, start_tracking_loop, sync_tracker_config, AppState};
 
 pub mod utils;
 pub mod handler;
@@ -23,7 +23,7 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![sync_tracker_config,start_tracking_loop])
+        .invoke_handler(tauri::generate_handler![sync_tracker_config,start_tracking_loop,launch_lol])
         .plugin(tauri_plugin_process::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
