@@ -1,3 +1,4 @@
+use crate::utils::keyboard::init_global_keyboard;
 use crate::utils::process_info::get_league_client_info;
 use crate::utils::rest::RestClient;
 use serde_json::Value;
@@ -20,12 +21,10 @@ pub async fn invoke_lcu(
             Ok(result) => Ok(result),
             Err(_) => Err(Value::Null),
         },
-        "post" => {
-            match serde_json::from_str::<Value>(body) {
-                Ok(result) => Ok(client.post(uri, result).await.expect("post请求失败")),
-                Err(_) => Ok(client.post(uri,Value::Null).await.expect("post请求失败")),
-            }
-        }
+        "post" => match serde_json::from_str::<Value>(body) {
+            Ok(result) => Ok(client.post(uri, result).await.expect("post请求失败")),
+            Err(_) => Ok(client.post(uri, Value::Null).await.expect("post请求失败")),
+        },
         _ => Ok(Value::Null),
     }
 }
@@ -54,4 +53,9 @@ pub fn listen_for_client_start(app: AppHandle) {
             tokio::time::sleep(Duration::from_secs(3)).await;
         }
     });
+}
+
+#[tauri::command]
+pub fn init_keyboard(app: AppHandle) {
+    init_global_keyboard(app);
 }

@@ -32,11 +32,12 @@ class Background {
     let elapsedTime = 0;
     const intervalTime = 3000;
 
-    // await invoke("init_keyboard");
+    await invoke("init_keyboard");
     const lcuSuccess = setInterval(async () => {
       const isGetPath = await getClientPath();
       if (isGetPath) {
         clearInterval(lcuSuccess);
+        // todo
         // setTimeout(async () => {
         //   this.gameFlow.sendStartEvent();
         //   await invoke("start_listener");

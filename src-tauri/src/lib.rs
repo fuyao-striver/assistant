@@ -1,5 +1,5 @@
 use crate::handler::tracker::{AppState, launch_lol, start_tracking_loop, sync_tracker_config};
-use crate::handler::{invoke_lcu, listen_for_client_start};
+use crate::handler::{init_keyboard, invoke_lcu, listen_for_client_start};
 use std::sync::atomic::AtomicBool;
 use std::sync::{Arc, Mutex};
 
@@ -29,7 +29,8 @@ pub fn run() {
             start_tracking_loop,
             launch_lol,
             listen_for_client_start,
-            invoke_lcu
+            invoke_lcu,
+            init_keyboard
         ])
         .plugin(tauri_plugin_process::init())
         .run(tauri::generate_context!())
