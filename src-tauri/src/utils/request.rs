@@ -12,7 +12,7 @@ use std::time::Duration;
 /// - Riot 本地 API 的自签名证书（跳过公共 CA 验证）
 /// - 可选的 Basic Auth 认证头
 /// - 3 秒请求超时
-pub fn build_request_client(auth_token: Option<String>) -> reqwest::Client {
+pub fn build_request_client(auth_token: Option<&str>) -> reqwest::Client {
     // 加载 Riot 客户端本地 API 使用的自签名证书（PEM 格式）
     let cert = Certificate::from_pem(include_bytes!("riotgames.pem")).expect("读取证书失败");
 
@@ -28,8 +28,8 @@ pub fn build_request_client(auth_token: Option<String>) -> reqwest::Client {
 
     // 构建请求客户端
     reqwest::ClientBuilder::new()
-        .default_headers(headers)    // 注册默认请求头（包含可能的 Auth）
-        .add_root_certificate(cert)  // 添加 Riot 本地 API 的自签名根证书
+        .default_headers(headers) // 注册默认请求头（包含可能的 Auth）
+        .add_root_certificate(cert) // 添加 Riot 本地 API 的自签名根证书
         .timeout(Duration::from_secs(3)) // 设置 3 秒超时（本地 API 响应应很快）
         .build()
         .expect("构建请求客户端失败")

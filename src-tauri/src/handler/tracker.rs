@@ -1,30 +1,39 @@
-use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use tauri::{Manager, PhysicalPosition, WebviewWindow};
-use windows::core::PCWSTR;
 use windows::Win32::Foundation::{HWND, RECT};
-use windows::Win32::Graphics::Dwm::{DwmGetWindowAttribute, DWMWA_EXTENDED_FRAME_BOUNDS};
+use windows::Win32::Graphics::Dwm::{DWMWA_EXTENDED_FRAME_BOUNDS, DwmGetWindowAttribute};
 use windows::Win32::UI::WindowsAndMessaging::{FindWindowW, IsIconic, IsWindow};
+use windows::core::PCWSTR;
 
 pub struct AppState {
     pub is_enabled: Arc<AtomicBool>,
     pub is_running: Arc<AtomicBool>,
-    pub dock_side: Arc<Mutex<String>>
+    pub dock_side: Arc<Mutex<String>>,
 }
 
 pub struct Tracker;
 
 impl Tracker {
-    pub fn start_tracking(windows: WebviewWindow,is_enabled: Arc<AtomicBool>,dock_side: Arc<Mutex<String>>) {
+    pub fn start_tracking(
+        windows: WebviewWindow,
+        is_enabled: Arc<AtomicBool>,
+        dock_side: Arc<Mutex<String>>,
+    ) {
         tauri::async_runtime::spawn_blocking(move || {
             let mut last_pos: Option<RECT> = None;
             let mut last_side: Option<String> = None;
 
             loop {
-                if windows.inner_position().is_err() { break; }
-                if !is_enabled.load(Ordering::Relaxed) { thread::sleep(Duration::from_millis(500)); continue; }
+                if windows.inner_position().is_err() {
+                    break;
+                }
+                if !is_enabled.load(Ordering::Relaxed) {
+                    thread::sleep(Duration::from_millis(500));
+                    continue;
+                }
                 if let Some((hwnd, visible_rect)) = Self::get_lol_visible_rect() {
                     // 1. 检测客户端是否处于“非活跃/隐藏”状态
                     let is_minimized = unsafe { IsIconic(hwnd).as_bool() };
@@ -68,11 +77,14 @@ impl Tracker {
         });
     }
     /// 获取 LOL 窗口真正的可见矩形（排除阴影）
-    fn get_lol_visible_rect()-> Option<(HWND,RECT)> {
-        let title: Vec<u16> = std::os::windows::ffi::OsStrExt::encode_wide(std::ffi::OsStr::new("League of Legends"))
-            .chain(std::iter::once(0)).collect();
-        let hwnd = unsafe { FindWindowW(None, PCWSTR(title.as_ptr())).expect("FindWindowW failed") };
-        if !hwnd.0.is_null() && unsafe {IsWindow(Some(hwnd)).as_bool()} {
+    fn get_lol_visible_rect() -> Option<(HWND, RECT)> {
+        let title: Vec<u16> =
+            std::os::windows::ffi::OsStrExt::encode_wide(std::ffi::OsStr::new("League of Legends"))
+                .chain(std::iter::once(0))
+                .collect();
+        let hwnd =
+            unsafe { FindWindowW(None, PCWSTR(title.as_ptr())).expect("FindWindowW failed") };
+        if !hwnd.0.is_null() && unsafe { IsWindow(Some(hwnd)).as_bool() } {
             let mut rect = RECT::default();
             // 使用 DWM 属性获取排除阴影后的真实尺寸
             let result = unsafe {
@@ -106,7 +118,7 @@ impl Tracker {
 #[tauri::command]
 pub fn sync_tracker_config(enabled: bool, side: String, state: tauri::State<'_, AppState>) {
     log::info!("接受到的side为: {:?}", side);
-    state.is_enabled.store(enabled,Ordering::Relaxed);
+    state.is_enabled.store(enabled, Ordering::Relaxed);
     {
         let mut dock = state.dock_side.lock().unwrap();
         *dock = side;
@@ -129,6 +141,7 @@ pub fn start_tracking_loop(state: tauri::State<'_, AppState>, window: WebviewWin
 
 #[tauri::command]
 pub fn launch_lol(path: &str) {
-    std::process::Command::new(path).spawn().expect("Failed to launch lol");
+    std::process::Command::new(path)
+        .spawn()
+        .expect("Failed to launch lol");
 }
-

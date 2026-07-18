@@ -1,4 +1,5 @@
 import { type ConfigRank, type ConfigSettingTypes, Lane, LolTrackerMode, Theme, TierCode } from "@/background/types";
+import { invokeLcu, Method } from "@/lcu";
 
 const configSetting: ConfigSettingTypes = {
   autoPickChampion: {
@@ -103,4 +104,17 @@ export const configInit = (): void => {
   for (const key of CONFIG_KEYS) {
     migrateConfig(key, defaults[key]);
   }
+};
+
+export const getClientPath = async () => {
+  const clientPath = await invokeLcu<string | null>(Method.GET, "/data-store/v1/install-dir");
+  console.log(clientPath);
+  if (clientPath === null) return false; // 早期返回，避免后续代码执行
+  const storedPath = localStorage.getItem("clientPath");
+  const updatedPath = clientPath.replace("LeagueClient", "TCLS\\client.exe");
+  // 只在路径不一致时更新
+  if (storedPath?.toLowerCase() !== updatedPath.toLowerCase()) {
+    localStorage.setItem("clientPath", updatedPath);
+  }
+  return true;
 };

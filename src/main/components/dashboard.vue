@@ -35,12 +35,13 @@
 
 <script setup lang="ts">
 import { NButton, NCheckbox, NDrawer, NIcon, NSpace, useDialog } from "naive-ui";
-import { Bulb, RemoveCircleOutline, SettingsOutline, CloseCircleOutline } from "@vicons/ionicons5";
+import { Bulb, CloseCircleOutline, RemoveCircleOutline, SettingsOutline } from "@vicons/ionicons5";
 import { h, ref } from "vue";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { ConfigSettingTypes } from "@/background/types";
 import { exit } from "@tauri-apps/plugin-process";
 import Setting from "@/main/components/setting.vue";
+import { invokeLcu, Method } from "@/lcu";
 
 const settingDrawer = ref(false);
 const dialog = useDialog();
@@ -90,12 +91,11 @@ const handleClose = () => {
     transformOrigin: "center",
     style: "margin:8px;max-width:334px;margin-bottom:78px; border-radius:12px;",
     closable: false,
-    onPositiveClick: () => {
-      // todo
-      // if (shouldCloseLOL.value) {
-      //   invokeLcu("post", "/process-control/v1/process/quit");
-      // }
-      exit(1);
+    onPositiveClick: async () => {
+      if (shouldCloseLOL.value) {
+        await invokeLcu(Method.POST, "/process-control/v1/process/quit");
+      }
+      await exit(1);
     },
     onNegativeClick: () => {},
   });
