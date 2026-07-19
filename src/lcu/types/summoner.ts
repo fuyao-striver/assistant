@@ -36,3 +36,25 @@ export interface SummonerInfo {
   currentId: number;
   tagLine: string | undefined;
 }
+
+export interface SummonerData {
+  summonerInfo: SummonerInfo | null;
+  rankList: string[] | null;
+  champLevel: string[][] | null;
+}
+
+export interface ChampionMasteryTypes {
+  championId: number;
+  championLevel: number;
+  championPoints: number;
+  championPointsSinceLastLevel: number;
+  championPointsUntilNextLevel: number;
+  chestGranted: boolean;
+  formattedChampionPoints: string;
+  formattedMasteryGoal: string;
+  highestGrade: string;
+  lastPlayTime: number;
+  playerId: number;
+  puuid: string;
+  tokensEarned: number;
+}
