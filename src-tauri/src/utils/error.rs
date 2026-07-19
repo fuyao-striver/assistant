@@ -34,3 +34,19 @@ pub enum ProcessInfoError {
     #[error("无法从进程参数分析RSO平台ID")]
     PlatformIdNotFound,
 }
+
+/// WebSocket连接到LCU API的错误
+#[derive(Error, Debug)]
+pub enum LcuWebsocketError {
+    /// 准备连接的身份验证凭据时出错
+    #[error("准备LCU连接的身份验证凭据出错")]
+    AuthError,
+
+    /// 向LCU API发送取消/订阅消息时出错
+    #[error("向LCU API发送取消/订阅消息时出错")]
+    SendError,
+
+    /// 终止连接错误
+    #[error("因此{0}连接终止")]
+    Disconnected(String),
+}

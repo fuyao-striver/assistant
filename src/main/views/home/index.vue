@@ -6,6 +6,20 @@
 
 <script setup lang="ts">
 import StartGame from "@/main/views/home/startGame.vue";
+import { onMounted, ref } from "vue";
+import { invoke } from "@tauri-apps/api/core";
+
+const region = ref("");
+
+onMounted(() => {
+  invoke<string>("get_lol_region")
+    .then((value) => {
+      region.value = value;
+    })
+    .catch(() => {
+      // todo
+    });
+});
 </script>
 
 <style scoped></style>

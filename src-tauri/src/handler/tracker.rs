@@ -1,8 +1,9 @@
+use crate::utils::process_info::LeagueClientUx;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use tauri::{Manager, PhysicalPosition, WebviewWindow};
+use tauri::{AppHandle, Manager, PhysicalPosition, WebviewWindow};
 use windows::Win32::Foundation::{HWND, RECT};
 use windows::Win32::Graphics::Dwm::{DWMWA_EXTENDED_FRAME_BOUNDS, DwmGetWindowAttribute};
 use windows::Win32::UI::WindowsAndMessaging::{FindWindowW, IsIconic, IsWindow};
@@ -144,4 +145,14 @@ pub fn launch_lol(path: &str) {
     std::process::Command::new(path)
         .spawn()
         .expect("Failed to launch lol");
+}
+
+#[tauri::command]
+pub fn get_lol_region(app: AppHandle) -> Result<String, String> {
+    let state = app.state::<LeagueClientUx>();
+    if state.region.is_empty() {
+        Err("客户端未运行".to_string())
+    } else {
+        Ok(state.region.clone())
+    }
 }

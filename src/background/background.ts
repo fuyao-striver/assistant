@@ -2,9 +2,13 @@ import { configInit, getClientPath } from "@/background/utils/config.ts";
 import { createMainWindows } from "@/background/utils/windows.ts";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { GameFlow } from "@/background/gameFlow.ts";
 
 class Background {
+  private gameFlow: GameFlow;
+
   constructor() {
+    this.gameFlow = new GameFlow();
     configInit();
     this.initializeListeners();
   }
@@ -37,11 +41,10 @@ class Background {
       const isGetPath = await getClientPath();
       if (isGetPath) {
         clearInterval(lcuSuccess);
-        // todo
-        // setTimeout(async () => {
-        //   this.gameFlow.sendStartEvent();
-        //   await invoke("start_listener");
-        // }, 500);
+        setTimeout(async () => {
+          await this.gameFlow.sendStartEvent();
+          await invoke("start_listener");
+        }, 500);
       }
 
       elapsedTime += intervalTime;

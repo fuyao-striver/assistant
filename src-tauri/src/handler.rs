@@ -6,6 +6,7 @@ use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager};
 
 pub mod lcu;
+pub mod listener;
 pub mod tracker;
 
 #[tauri::command]
