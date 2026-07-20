@@ -28,3 +28,22 @@ export const createMainWindows = async () => {
     await invoke("start_tracking_loop");
   });
 };
+
+
+// 创建我的战绩窗口
+export const createQueryMatchWindow = async () => {
+  const webview = new WebviewWindow("queryMatch",{
+    title: "我的战绩",
+    url: "src/queryMatch/index.html",
+    width: 1174,
+    height: 668,
+    resizable: false,
+    decorations: false,
+    center: true,
+    visible: false,
+    transparent: true,
+  })
+  await webview.once("tauri://webview-created", async () => {
+    await webview.show()
+  })
+}

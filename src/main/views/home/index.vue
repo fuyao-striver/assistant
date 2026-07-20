@@ -88,6 +88,7 @@ import { queryMasteryChampList, queryRankPoint, querySummonerHonorLevel, querySu
 import type { SummonerData } from "@/lcu/types/summoner.ts";
 import { NAvatar, NButton, NCard, NDivider, NEllipsis, NList, NListItem, NProgress, NSpace, NTag } from "naive-ui";
 import SummonerMasteryChamp from "@/main/components/summonerMasteryChamp.vue";
+import { createQueryMatchWindow } from "@/background/utils/windows";
 
 const region = ref("");
 const summonerData: SummonerData = reactive({
@@ -121,8 +122,8 @@ const init = async () => {
 };
 console.log(summonerData);
 
-const openWin = () => {
-  // todo
+const openWin =async () => {
+  await createQueryMatchWindow()
 };
 </script>
 
